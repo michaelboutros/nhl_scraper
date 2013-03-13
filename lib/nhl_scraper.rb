@@ -27,7 +27,11 @@ class NHLScraper
 
   def initialize(lazy = false)
     @schedule_document = Nokogiri(open(SCHEDULE_URL).read)
-    @standings_document = Nokogiri(open(STANDINGS_URL).read)
+    # @standings_document = Nokogiri(open(STANDINGS_URL).read)
+
+    # @schedule_document = Nokogiri(File.open('../test/11-03-2013-schedule.html'))
+    @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
+
     @lazy = lazy
 
     unless @lazy
@@ -72,7 +76,7 @@ class NHLScraper
     return completed_games_table.map do |row|
       result_matches = row.at('td.tvInfo').inner_text.delete("\n").match('FINAL: \w+\((\d)\) - \w+ \((\d)\)(?:(.+))?')
 
-      home_team_score, away_team_score = result_matches[1].to_i, result_matches[2].to_i
+      home_team_score, away_team_score = result_matches[2].to_i, result_matches[1].to_i
       
       if result_matches[3].nil?
         winning_team_points, losing_team_points = 2, 0
@@ -121,3 +125,6 @@ class NHLScraper
       }      
     end
 end
+
+scraper = NHLScraper.new
+puts scraper.completed_games.last
