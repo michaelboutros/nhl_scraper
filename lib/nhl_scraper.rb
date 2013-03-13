@@ -27,10 +27,10 @@ class NHLScraper
 
   def initialize(lazy = false)
     @schedule_document = Nokogiri(open(SCHEDULE_URL).read)
-    # @standings_document = Nokogiri(open(STANDINGS_URL).read)
+    @standings_document = Nokogiri(open(STANDINGS_URL).read)
 
     # @schedule_document = Nokogiri(File.open('../test/11-03-2013-schedule.html'))
-    @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
+    # @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
 
     @lazy = lazy
 
@@ -125,6 +125,3 @@ class NHLScraper
       }      
     end
 end
-
-scraper = NHLScraper.new
-puts scraper.completed_games.last
