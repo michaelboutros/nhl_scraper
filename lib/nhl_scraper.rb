@@ -35,8 +35,9 @@ class NHLScraper
     @lazy = lazy
 
     unless @lazy
-      scrape_all_games
       @standings = scrape_standings
+      @divisions = scrape_divisions
+      scrape_all_games
     end
   end
 
@@ -58,6 +59,10 @@ class NHLScraper
 
   def standings
     @standings ||= scrape_standings
+  end
+
+  def divisions
+    @divisions || scrape_divisions
   end
 
   def scrape_all_games
@@ -116,12 +121,31 @@ class NHLScraper
     end
   end
 
+  def scrape_divisions
+    @divisions = {}
+    
+    @standings_document.at('table.standings/tbody').search('tr').each do |row|
+      columns = row.search('td')
+      team = columns[1].search('a').last.inner_text.strip
+      division = columns[2].inner_text.strip.to_sym
+
+      @divisions[team] = division
+    end
+
+    return @divisions
+  end
+
   protected
     def extract_date_and_teams(row)
+      home_team = row.search('td.team').last.at('div.teamName').inner_text
+      away_team = row.search('td.team').first.at('div.teamName').inner_text
+
       {
           date: Date.parse(row.at('td.date/div.skedStartDateSite').inner_text),
-          away_team: row.search('td.team').first.at('div.teamName').inner_text,
-          home_team: row.search('td.team').last.at('div.teamName').inner_text
+          home_team: home_team,
+          away_team: away_team,
+          home_team_division: @divisions[home_team],
+          away_team_division: @divisions[away_team]
       }      
     end
 end
