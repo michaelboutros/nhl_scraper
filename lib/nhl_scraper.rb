@@ -75,10 +75,10 @@ class NHLScraper
       home_team_score, away_team_score = result_matches[1].to_i, result_matches[2].to_i
       
       if result_matches[3].nil?
-        winning_team_points, losing_team_points = 3, 0
+        winning_team_points, losing_team_points = 2, 0
         game_type = :regular
       else
-        winning_team_points, losing_team_points = 3, 1
+        winning_team_points, losing_team_points = 2, 1
         game_type = (result_matches[3] == 'OT' ? :overtime : :shootout)
       end
 
