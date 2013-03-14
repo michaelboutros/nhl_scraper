@@ -26,11 +26,11 @@ class NHLScraper
   STANDINGS_URL = 'http://www.nhl.com/ice/standings.htm?type=lea'
 
   def initialize(lazy = false)
-    # @schedule_document = Nokogiri(open(SCHEDULE_URL).read)
-    # @standings_document = Nokogiri(open(STANDINGS_URL).read)
+    @schedule_document = Nokogiri(open(SCHEDULE_URL).read)
+    @standings_document = Nokogiri(open(STANDINGS_URL).read)
 
-    @schedule_document = Nokogiri(File.open('../test/11-03-2013-schedule.html'))
-    @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
+    # @schedule_document = Nokogiri(File.open('../test/11-03-2013-schedule.html'))
+    # @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
 
     @lazy = lazy
 
