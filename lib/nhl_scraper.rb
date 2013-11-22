@@ -29,8 +29,8 @@ class NHLScraper
     @schedule_document = Nokogiri(open(SCHEDULE_URL).read)
     @standings_document = Nokogiri(open(STANDINGS_URL).read)
 
-    # @schedule_document = Nokogiri(File.open('../test/11-03-2013-schedule.html'))
-    # @standings_document = Nokogiri(File.open('../test/11-03-2013-standings.html'))
+    # @schedule_document = Nokogiri(File.open('test/21-11-2013-schedule.html'))
+    # @standings_document = Nokogiri(File.open('test/11-03-2013-standings.html'))
 
     @lazy = lazy
 
@@ -73,14 +73,15 @@ class NHLScraper
 
   def scrape_future_games
     future_games_table = @schedule_document.search('table.data.schedTbl').first.search('tbody/tr')
-    return future_games_table.map { |row| extract_date_and_teams(row)}
+    return future_games_table.map { |row| extract_date_and_teams(row) }
   end
 
   def scrape_completed_games
     completed_games_table = @schedule_document.search('table.data.schedTbl').last.search('tbody/tr')
     return completed_games_table.map do |row|
-      result_matches = row.at('td.tvInfo').inner_text.delete("\n").match('FINAL: \w+\((\d)\) - \w+ \((\d)\)(?:(.+))?')
+      next unless row.search('td').length == 6
 
+      result_matches = row.at('td.tvInfo').inner_text.delete("\n").match('FINAL: \w+\((\d)\) - \w+ \((\d)\)(?:(.+))?')
       home_team_score, away_team_score = result_matches[2].to_i, result_matches[1].to_i
       
       if result_matches[3].nil?
@@ -137,6 +138,9 @@ class NHLScraper
 
   protected
     def extract_date_and_teams(row)
+      # Skip over non-game rows, ie. rows for Stadium Games.
+      return unless row.search('td').length == 6
+
       home_team = row.search('td.team').last.at('div.teamName').inner_text
       away_team = row.search('td.team').first.at('div.teamName').inner_text
 
