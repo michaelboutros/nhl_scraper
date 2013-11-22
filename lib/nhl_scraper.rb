@@ -73,7 +73,7 @@ class NHLScraper
 
   def scrape_future_games
     future_games_table = @schedule_document.search('table.data.schedTbl').first.search('tbody/tr')
-    return future_games_table.map { |row| extract_date_and_teams(row) }
+    return future_games_table.map { |row| extract_date_and_teams(row) }.compact
   end
 
   def scrape_completed_games
@@ -105,7 +105,7 @@ class NHLScraper
         away_team_points: away_team_points,
         game_type: game_type
         })
-    end
+    end.compact
   end
 
   def scrape_standings
@@ -153,3 +153,5 @@ class NHLScraper
       }      
     end
 end
+
+puts NHLScraper.new.completed_games.inspect
