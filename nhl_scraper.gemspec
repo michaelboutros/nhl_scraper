@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'nhl_scraper'
-  s.version     = '1.0.1'
-  s.date        = '2013-04-11'
+  s.version     = '1.0.2'
+  s.date        = '2013-11-21'
   s.summary     = 'Simple scraper to gather data about current NHL season.'
   s.authors     = ['Michael Boutros']
   s.email       = 'me@michaelboutros.com'
